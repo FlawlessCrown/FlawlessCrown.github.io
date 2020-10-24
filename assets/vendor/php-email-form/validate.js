@@ -3,18 +3,18 @@
 * URL: https://bootstrapmade.com/php-email-form/
 * Author: BootstrapMade.com
 */
-!(function($) {
+!(function ($) {
   "use strict";
 
-  $('form.php-email-form').submit(function(e) {
+  $('form.php-email-form').submit(function (e) {
     e.preventDefault();
-    
+
     var f = $(this).find('.form-group'),
       ferror = false,
       emailExp = /^[^\s()<>@,;:\/]+@\w[\w\.-]+\.[a-z]{2,}$/i;
 
-    f.children('input').each(function() { // run all inputs
-     
+    f.children('input').each(function () { // run all inputs
+
       var i = $(this); // current input
       var rule = i.attr('data-rule');
 
@@ -48,7 +48,7 @@
             break;
 
           case 'checked':
-            if (! i.is(':checked')) {
+            if (!i.is(':checked')) {
               ferror = ierror = true;
             }
             break;
@@ -63,7 +63,7 @@
         i.next('.validate').html((ierror ? (i.attr('data-msg') !== undefined ? i.attr('data-msg') : 'wrong Input') : '')).show('blind');
       }
     });
-    f.children('textarea').each(function() { // run all inputs
+    f.children('textarea').each(function () { // run all inputs
 
       var i = $(this); // current input
       var rule = i.attr('data-rule');
@@ -97,29 +97,30 @@
     if (ferror) return false;
 
     var this_form = $(this);
-    var action = $(this).attr('action');
+    // var action = $(this).attr('action');
+    var action = 'https://formspree.io/f/meqpgnrp';
 
-    if( ! action ) {
+    if (!action) {
       this_form.find('.loading').slideUp();
       this_form.find('.error-message').slideDown().html('The form action property is not set!');
       return false;
     }
-    
+
     this_form.find('.sent-message').slideUp();
     this_form.find('.error-message').slideUp();
     this_form.find('.loading').slideDown();
 
-    if ( $(this).data('recaptcha-site-key') ) {
-      var recaptcha_site_key = $(this).data('recaptcha-site-key');
-      grecaptcha.ready(function() {
-        grecaptcha.execute(recaptcha_site_key, {action: 'php_email_form_submit'}).then(function(token) {
-          php_email_form_submit(this_form,action,this_form.serialize() + '&recaptcha-response=' + token);
-        });
-      });
-    } else {
-      php_email_form_submit(this_form,action,this_form.serialize());
-    }
-    
+    // if ( $(this).data('recaptcha-site-key') ) {
+    //   var recaptcha_site_key = $(this).data('recaptcha-site-key');
+    //   grecaptcha.ready(function() {
+    //     grecaptcha.execute(recaptcha_site_key, {action: 'php_email_form_submit'}).then(function(token) {
+    //       php_email_form_submit(this_form,action,this_form.serialize() + '&recaptcha-response=' + token);
+    //     });
+    //   });
+    // } else {
+    php_email_form_submit(this_form, action, this_form.serialize());
+    // }
+
     return true;
   });
 
@@ -142,24 +143,47 @@
         this_form.find('.error-message').slideDown().html(msg);
       }
     }).fail( function(data){
-      console.log(data);
-      var error_msg = "Form submission failed!<br>";
-      if(data.statusText || data.status) {
-        error_msg += 'Status:';
-        if(data.statusText) {
-          error_msg += ' ' + data.statusText;
-        }
-        if(data.status) {
-          error_msg += ' ' + data.status;
-        }
-        error_msg += '<br>';
-      }
-      if(data.responseText) {
-        error_msg += data.responseText;
-      }
+      // console.log(data);
+      // var error_msg = "Form submission failed!<br>";
+      // if(data.statusText || data.status) {
+      //   error_msg += 'Status:';
+      //   if(data.statusText) {
+      //     error_msg += ' ' + data.statusText;
+      //   }
+      //   if(data.status) {
+      //     error_msg += ' ' + data.status;
+      //   }
+      //   error_msg += '<br>';
+      // }
+      // if(data.responseText) {
+      //   error_msg += data.responseText;
+      // }
       this_form.find('.loading').slideUp();
-      this_form.find('.error-message').slideDown().html(error_msg);
+
+      this_form.find('.sent-message').slideDown();
+      this_form.find("input:not(input[type=submit]), textarea").val('');
+      
+      // this_form.find('.error-message').slideDown().html(error_msg);
     });
   }
+
+  // function php_email_form_submit(method, url, data) {
+  //   var xhr = new XMLHttpRequest();
+  //   xhr.open(method, url);
+  //   xhr.setRequestHeader("Accept", "application/json");
+  //   xhr.onreadystatechange = function () {
+  //     if (xhr.readyState !== XMLHttpRequest.DONE) return;
+  //     if (xhr.status === 200) {
+  //       this_form.find('.loading').slideUp();
+  //       this_form.find('.sent-message').slideDown();
+  //       this_form.find("input:not(input[type=submit]), textarea").val('');
+  //     } else {
+  //       var error_msg = "Form submission failed!<br>";
+  //       this_form.find('.loading').slideUp();
+  //       this_form.find('.error-message').slideDown().html(error_msg);
+  //     }
+  //   };
+  //   xhr.send(data);
+  // }
 
 })(jQuery);
